@@ -1,12 +1,14 @@
 from tika import parser
-from PortugueseDateParser import PortugueseDateParser
+from dateutil.parser import parser as date_parser
+from PortugueseParserInfo import PortugueseParserInfo
+
 
 
 
 class DocumentParser():
 
     def __init__(self):
-        self.portDateParser = PortugueseDateParser()
+        self.portDateParser = date_parser(info = PortugueseParserInfo())
 
 
     def isDate(self, token):
@@ -78,8 +80,8 @@ class DocumentParser():
         return info
 
 
-    def parse(self, path):
-        raw = parser.from_file('file')
+    def parse(self, filePath):
+        raw = parser.from_file(filePath)
         lines = raw['content'].split('\n')
 
         info = {
