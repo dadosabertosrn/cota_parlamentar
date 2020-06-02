@@ -81,7 +81,11 @@ class DocumentParser():
     def getInfoFromDetail(self, line):
         info = dict()
 
-        info["date"] = self.portDateParser.parse(line[0])
+        try:
+            info["dateDatetime"] = self.portDateParser.parse(line[0])
+        except:
+            info["dateStr"] = line[0]
+
         info["reciptId"] = line[1]
         info["cpfCnpj"] = line[2]
         info["fundament"] = line[3]
