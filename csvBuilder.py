@@ -37,12 +37,14 @@ with open(outputPath, "w") as csvOuput:
 
         parsedInfo = dp.parse(documentPath)
 
+        if "issues" not in parsedInfo: continue
         for issue in parsedInfo["issues"]:
+            if "details" not in issue: continue
             for detail in issue["details"]:
                 line = [
                     detail["cpfCnpj"],
                     parsedInfo["nameVereador"],
-                    detail["cupomNumbr"],
+                    detail["reciptId"],
                     0,
                     detail["detailCost"],
                     detail["date"].strftime("%d/%m/%y"),
