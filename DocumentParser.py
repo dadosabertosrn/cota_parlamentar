@@ -21,21 +21,31 @@ class DocumentParser():
             return False
 
 
+    def isMonthYear(self, token):
+        try:
+            month, year = token.split('/')
+            year = int(year)
+            return month in ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+        except:
+            return False
+
+
     def getLineClassification(self, line):
         if len(line) == 0:
             return "none"
 
         hasVereador = "Vereador(a):" in line
+        hasMonthYear = self.isMonthYear(line[0])
         hasRSOnPos = len(line) > 1 and line[-2] == "R$"
         firstIsDate = self.isDate(line[0])
 
         if hasVereador and hasRSOnPos:
             return "total"
-        if hasVereador and not hasRSOnPos:
+        if hasVereador and not hasRSOnPos and hasMonthYear:
             return "title"
         if hasRSOnPos and firstIsDate:
             return "detail"
-        if hasRSOnPos and not firstIsDate:
+        if hasRSOnPos and not firstIsDate and not hasVereador:
             return "issue"
 
         return "none"
@@ -72,7 +82,7 @@ class DocumentParser():
         info = dict()
 
         info["date"] = self.portDateParser.parse(line[0])
-        info["cupomNumbr"] = int(line[1])
+        info["reciptId"] = line[1]
         info["cpfCnpj"] = line[2]
         info["fundament"] = line[3]
         info["desc"] = " ".join(line[4:-2])
