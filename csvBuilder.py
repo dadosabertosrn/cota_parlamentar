@@ -3,6 +3,8 @@ import os
 
 from DocumentParser import DocumentParser
 
+
+# tratando argumetnos passados por linha de comando
 parser = argparse.ArgumentParser()
 parser.add_argument("-fp", "--folderPath", required = True)
 parser.add_argument("-op", "--outputPath", required = True)
@@ -11,6 +13,7 @@ args = parser.parse_args()
 documentsFolder = args.folderPath
 outputPath = args.outputPath
 
+# init do nosso parser
 dp = DocumentParser()
 
 """
@@ -29,16 +32,23 @@ year: ano
 
 """
 
+
 with open(outputPath, "w") as csvOuput:
+    # escrita de cabecalho
     csvOuput.write("cnpj_cpf;congressperson_name;document_number;document_type;document_value;issue_date;month;state;subquota_description;supplier;total_net_value;year\n")
 
+    # para cada arquivo na pasta passada por parametro
     for documentPath in os.listdir(documentsFolder):
+        # recupera path completo do arquivo
         documentPath = os.path.join(documentsFolder, documentPath)
 
-        print(">> File: " + documentPath)
+        # log para indicar qual arquivo esta sendo processado
+        print(">> File being processed: " + documentPath)
 
+        # extraindo informacoes de parsing
         parsedInfo = dp.parse(documentPath)
 
+        # para cada detalhamento de cada issue, imprimo uma linha no CSV
         if "issues" not in parsedInfo: continue
         for issue in parsedInfo["issues"]:
             if "details" not in issue: continue

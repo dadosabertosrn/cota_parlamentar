@@ -12,6 +12,9 @@ class DocumentParser():
 
 
     def isDate(self, token):
+        '''
+        Funcao que retorna se token passado representa uma data
+        '''
         try:
             day, month, year = token.split('/')
             day = int(day)
@@ -22,6 +25,9 @@ class DocumentParser():
 
 
     def isMonthYear(self, token):
+        '''
+        Funcao que retorna se token passado esta no formato Mes/Ano
+        '''
         try:
             month, year = token.split('/')
             year = int(year)
@@ -31,14 +37,24 @@ class DocumentParser():
 
 
     def getLineClassification(self, line):
+        '''
+        Funcao para indicar classe da linha passada
+        As classes sao:
+            - title: titulo do documento
+            - issue: declaracao do gasto
+            - detail: detalhamento do gasto
+            - total: total do que foi gasto
+            - none: nao tem classe, nao tem importancia
+        '''
         if len(line) == 0:
             return "none"
 
-        hasVereador = "Vereador(a):" in line
-        hasMonthYear = self.isMonthYear(line[0])
-        hasRSOnPos = len(line) > 1 and line[-2] == "R$"
-        firstIsDate = self.isDate(line[0])
+        hasVereador = "Vereador(a):" in line # checa se a string "Vereador(a):" esta presente na lihnha
+        hasMonthYear = self.isMonthYear(line[0]) # checa se o primeiro token da linha esta no formato Mes/Ano
+        hasRSOnPos = len(line) > 1 and line[-2] == "R$" # checa se tem um cifrao no penultimo token da linha
+        firstIsDate = self.isDate(line[0]) # checa se o primeiro token da linha eh uma data
 
+        # atribui a classe de acordo com o que foi extraido sobre a linha
         if hasVereador and hasRSOnPos:
             return "total"
         if hasVereador and not hasRSOnPos and hasMonthYear:
@@ -52,6 +68,9 @@ class DocumentParser():
 
 
     def getInfoFromTitle(self, line):
+        '''
+        Funcao para extrair informacao de class "title"
+        '''
         info = dict()
 
         name = []
@@ -70,6 +89,9 @@ class DocumentParser():
 
 
     def getInfoFromIssue(self, line):
+        '''
+        Funcao para extrair informacao de class "issue"
+        '''
         # last two are "R$" and "float"
         info = dict()
         info["issueDesc"] = " ".join(line[:-2])
@@ -79,6 +101,9 @@ class DocumentParser():
 
 
     def getInfoFromDetail(self, line):
+        '''
+        Funcao para extrair informacao de class "detail"
+        '''
         info = dict()
 
         try:
@@ -96,25 +121,31 @@ class DocumentParser():
 
 
     def parse(self, filePath):
+
+        # usnado o tika para extrair o texto do arquivo PDF passado
         raw = parser.from_file(filePath)
         lines = raw['content'].split('\n')
 
+        # inicializando o dicionario que ira armazenar os dados extraidos
         info = {
             "issues": []
         }
 
-        currentDetails = []
-        for line in lines:
-            # qual a classe da linha?
+
+        for line in lines: # para cada linha do PDF
+
+            # separa a string usando split por ' '
             line = line.split(' ')
+            # corta as linhas vazias
             line = [x for x in line if len(x) > 0]
 
+            # recuepra a classe da linha
             group = self.getLineClassification(line)
-            if group == "title":
-                info.update(self.getInfoFromTitle(line))
-            elif group == "issue":
-                info["issues"].append(self.getInfoFromIssue(line))
-            elif group == "detail":
+
+            # se for um titulo ou issue, extrai info da linha
+            if group == "title": info.update(self.getInfoFromTitle(line))
+            elif group == "issue": info["issues"].append(self.getInfoFromIssue(line))
+            elif group == "detail": # se for um detalhamento, adiciona a lista de detalhamentos da issue corrente
                 if "details" not in info["issues"][-1]:
                     info["issues"][-1]["details"] = []
 
