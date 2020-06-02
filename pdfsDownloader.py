@@ -1,24 +1,44 @@
 import requests
+from requests_consts import YEAR2PARAMS
+import argparse
+import os
 
-url = "https://www.cmnat.rn.gov.br/vereadores/verbas"
-postValues = {
-'vereador_id' : 13,
-'mes_id': 25
-}
-
-
-r = requests.post(url, data=postValues)
+def maybeCreateDir(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
 
 
-file = open("resp_content.pdf", "wb")
-file.write(r.content)
-file.close()
+parser = argparse.ArgumentParser()
+parser.add_argument("-fp", "--outputPath", required = True)
+parser.add_argument("--year", required = True)
+args = parser.parse_args()
+
+params = YEAR2PARAMS[args.year]
+url = params["url"]
+
+outputPath = args.outputPath
+maybeCreateDir(outputPath)
 
 
-content_type = response.headers['content-type']
+for month_id in params["months_ids"]:
+    for i in range(1, 100):
+        postValues = {
+            'mes_id' : month_id,
+            'vereador_id' : str(i)
+        }
 
-if 'pdf' in content_type:
-    print(f'[OK] {url}')
-    f.write(response.content)
-else:
-    print(f'[Fail] {url}')
+        # print(postValues)
+
+        r = requests.post(url, data=postValues)
+
+        content_type = r.headers['content-type']
+
+        # print(r.content)
+
+        if 'pdf' in content_type:
+            print(f'[OK] {url}: {month_id} {str(i)}')
+            file = open(os.path.join(outputPath, "cota_{}_{}_{}.pdf".format(args.year, month_id, i)), "wb")
+            file.write(r.content)
+            file.close()
+        else:
+            print(f'[Fail] {url}: {month_id} {str(i)}')
