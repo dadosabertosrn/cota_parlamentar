@@ -33,7 +33,9 @@ Caso tenha algma dúvida, sugestão ou crítica, basta abrir um issue: [https://
 
 ## Roadmap
 
-- ## Contributing
+
+
+## Contributing
 
 Primeiramente é bom abrir um issue descrito acima, informando o que se deseja fazer, depois faça um *fork*, abra uma nova *branch* com a nova *feature* e faça o *pull request*.
 
