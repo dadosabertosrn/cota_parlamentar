@@ -35,6 +35,8 @@ with open(outputPath, "w") as csvOuput:
     for documentPath in os.listdir(documentsFolder):
         documentPath = os.path.join(documentsFolder, documentPath)
 
+        print(">> File: " + documentPath)
+
         parsedInfo = dp.parse(documentPath)
 
         if "issues" not in parsedInfo: continue
@@ -47,7 +49,7 @@ with open(outputPath, "w") as csvOuput:
                     detail["reciptId"],
                     0,
                     detail["detailCost"],
-                    detail["date"].strftime("%d/%m/%y"),
+                    detail["dateDatetime"].strftime("%d/%m/%y") if "dateDatetime" in detail else detail["dateStr"],
                     parsedInfo["monthDocument"],
                     "RN",
                     issue["issueDesc"],
