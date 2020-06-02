@@ -53,7 +53,8 @@ class DocumentParser():
                 nameStart = True
 
         info["nameVereador"] = " ".join(name)
-        info["dateDocument"] = line[0]
+        info["yearDocument"] = line[0].split('/')[1]
+        info["monthDocument"] = line[0].split('/')[0]
 
         return info
 
