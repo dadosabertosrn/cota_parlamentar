@@ -1,6 +1,6 @@
 # Cota Parlamentar da Câmara Municipal de Natal/RN
 
-[![CMN](https://cmnat.rn.gov.br/assets/site/img/logo-camara-sem-slogan.png)]
+![CMN](https://cmnat.rn.gov.br/assets/site/img/logo-camara-sem-slogan.png)
 
 Projeto para abertura de dados das cotas parlamentares. Atualmente encontram-se em formato PDF por ano nos endereços abaixo:
 
