@@ -18,14 +18,27 @@ Projeto para abertura de dados das cotas parlamentares. Atualmente encontram-se 
 ## Instalation
 
 ```bash
-
+pip install beautifulsoup4
 ```
 
 ## Usage
 
+Foram desenvolvidos 2 scripts:
+### `pdfsDownloader.py`
+Esse script faz o download dos PDFs relacionados às cotas do ano passado por argumento  
 ```bash
-
+python pdfsDownloader.py -fp PDFS_FOLDER --year YEAR
 ```
+`PDFS_FOLDER`: pasta em que os PDFs serão salvos  
+`YEAR`: ano das cotas relacionadas aos PDFs a serem salvos. Valores aceitos: `2017` a `2020`  
+
+### `csvBuilder.py`
+Esse script gera um CSV com os detalhamentos dos gastos a partir dos PDFs salvos  
+```bash
+python csvBuilder.py -fp PDFS_FOLDER -op OUT
+```
+`PDFS_FOLDER`: pasta em que os PDFs estão salvos  
+`OUT`: arquivo de saída. É sugerido adicionar `.csv` como extensão  
 
 ## Support
 
