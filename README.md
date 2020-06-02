@@ -18,6 +18,7 @@ Projeto para abertura de dados das cotas parlamentares. Atualmente encontram-se 
 ## Instalation
 
 ```bash
+pip install tika
 pip install beautifulsoup4
 ```
 
