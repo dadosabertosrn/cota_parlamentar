@@ -57,7 +57,8 @@ class DocumentParser():
         # atribui a classe de acordo com o que foi extraido sobre a linha
         if hasVereador and hasRSOnPos:
             return "total"
-        if hasVereador and not hasRSOnPos and hasMonthYear:
+        #if hasVereador and not hasRSOnPos and hasMonthYear:
+        if hasVereador and not hasRSOnPos:
             return "title"
         if hasRSOnPos and firstIsDate:
             return "detail"
@@ -82,8 +83,13 @@ class DocumentParser():
                 nameStart = True
 
         info["nameVereador"] = " ".join(name)
-        info["yearDocument"] = line[0].split('/')[1]
-        info["monthDocument"] = line[0].split('/')[0]
+        #info["yearDocument"] = line[0].split('/')[1]
+        #info["monthDocument"] = line[0].split('/')[0]
+        # aqui, 2018 e 12 são números arbitrários
+        # não sei se remover esses dois atributos quebra alguma coisa no código
+        # não estão sendo imprimidos no csv
+        info["yearDocument"] = 2018 # a sugestao é não usar isso e pegar do nome do arquivo
+        info["monthDocument"] = 12 # a sugestao é não usar isso e pegar do nome do arquivo
 
         return info
 
@@ -139,7 +145,7 @@ class DocumentParser():
             # corta as linhas vazias
             line = [x for x in line if len(x) > 0]
 
-            # recuepra a classe da linha
+            # recupera a classe da linha
             group = self.getLineClassification(line)
 
             # se for um titulo ou issue, extrai info da linha
